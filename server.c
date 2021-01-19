@@ -25,7 +25,7 @@ int getopt_long(int argc,
                 const struct option *longopts,
                 int *longindex);
 
-char *Version = "0.65";
+char *Version = "0.66";
 struct option *long_options;
 int sock;
 struct sockaddr_in serv_addr;
@@ -65,7 +65,7 @@ int show_statistics(int x)
 }
 
 void* threadFunc(void* thread_data);
-int daemon_func(void)
+int daemon_func(void);
 
 static void SIG_handler(int signum, siginfo_t *s, void *c) 
 {

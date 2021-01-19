@@ -10,6 +10,8 @@
 #include <sys/wait.h>
 #include <inttypes.h>
 #include <getopt.h>
+#include "types.h"
+#include "funcs.h"
 
 int getopt_long(int argc,
                 char * const argv[],

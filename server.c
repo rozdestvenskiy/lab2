@@ -398,7 +398,7 @@ void* threadFunc(void* thread_data)
     	pthread_detach(pthread_self());
     	pthread_exit(1);
     }
-    
+    	int lenn = sizeof(data->client);
     if (data->in_lang == NULL)
     {
     	fprintf(logfile, "Error: missed digit pointer\n", getTime());
@@ -408,7 +408,7 @@ void* threadFunc(void* thread_data)
         	fprintf(stdout, "Error: missed digit pointer\n", getTime());
     	}
     	strncat(error_str, "Error 02: missed digit pointer\n", strlen("Error 02: missed digit pointer\n"));
-	n = write(data->out_socket, error_str, strlen(error_str));
+	n = sendto(sock, error_str, strlen(error_str), 0, (struct sockaddr_in*)&data->client, lenn);
 	if (n == -1)
     	{
         	fprintf(logfile, "[%s] Error: writing to socket\n", getTime());
@@ -421,6 +421,7 @@ void* threadFunc(void* thread_data)
     	pthread_detach(pthread_self());
     	pthread_exit(1);
     }
+    
 
     char *lang = malloc(sizeof(char) * strlen(data->in_lang));
     char *digit = malloc(sizeof(char) * 100);
@@ -437,7 +438,7 @@ void* threadFunc(void* thread_data)
         	fprintf(stdout, "Error: invalid syntax of language selector\n", getTime());
     	}
     	strncat(error_str, "Error 03: invalid syntax of language selector\n", strlen("Error 03: invalid syntax of language selector\n"));
-	n = write(data->out_socket, error_str, strlen(error_str));
+	n = sendto(sock, error_str, strlen(error_str), 0, (struct sockaddr_in*)&data->client, lenn);
 	if (n == -1)
     	{
         	fprintf(logfile, "[%s] Error: writing to socket\n", getTime());
@@ -463,7 +464,7 @@ void* threadFunc(void* thread_data)
         		fprintf(stdout, "Error: invalid syntax of digit\n", getTime());
     		}
     		strncat(error_str, "Error 04: invalid syntax of digit\n", strlen("Error 02: invalid syntax of digit\n"));
-		n = write(data->out_socket, error_str, strlen(error_str));
+		n = sendto(sock, error_str, strlen(error_str), 0, (struct sockaddr_in*)&data->client, lenn);
 		if (n == -1)
     		{
         		fprintf(logfile, "[%s] Error: writing to socket\n", getTime());
@@ -491,7 +492,6 @@ void* threadFunc(void* thread_data)
     	out_str = to_string_EN(digit);
     }
     
-    int lenn = sizeof(data->client);
     n = sendto(sock, out_str, strlen(out_str), 0, (struct sockaddr_in*)&data->client, lenn);
     //printf("n = %d\n", n);
     if (n == -1)
@@ -541,13 +541,13 @@ int daemon_func(void)
         int dglen = 0;
         for (int i = 0; i < 255; i++)
         {
-        	if (strchr(dg, in_digit[i]) != NULL)
+        	if (in_digit[i] == '\n')
         	{
-        		dglen++;
+        		break;
         	}
         	else
         	{
-        		break;
+        		dglen++;
         	}
         	
         }
@@ -591,7 +591,7 @@ int daemon_func(void)
 		}
 		else
 		{
-			strncpy(td_in->in_lang, "EN", 2);
+			strncpy(td_in->in_lang, in_lang, 2);
 		}	
 	}
 	

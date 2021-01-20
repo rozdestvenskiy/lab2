@@ -19,7 +19,7 @@ int getopt_long(int argc,
                 const struct option *longopts,
                 int *longindex);
 
-char *Version = "0.65";
+char *Version = "0.66";
 struct option *long_options;
 
 int main(int argc, char* argv[])
